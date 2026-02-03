@@ -9,13 +9,19 @@ jobs:
   create_video:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install dependencies
+      - name: Install
         run: pip install -r requirements.txt
-      - name: Run main.py
+      - name: Secrets
+        run: |
+          echo "PIXABAY_API_KEY=${{ secrets.PIXABAY_API_KEY }}" >> $GITHUB_ENV
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> $GITHUB_ENV
+      - name: JSON
+        run: echo '${{ secrets.CLIENT_SECRETS_JSON }}' > client_secrets.json
+      - name: Run
         run: python main.py --auto
