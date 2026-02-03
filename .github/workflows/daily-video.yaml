@@ -8,20 +8,25 @@ on:
 jobs:
   create_video:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Python
+      
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install
+      
+      - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Secrets
+      
+      - name: Run bot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          CLIENT_SECRETS_JSON: ${{ secrets.CLIENT_SECRETS_JSON }}
         run: |
-          echo "PIXABAY_API_KEY=${{ secrets.PIXABAY_API_KEY }}" >> $GITHUB_ENV
-          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> $GITHUB_ENV
-      - name: JSON
-        run: echo '${{ secrets.CLIENT_SECRETS_JSON }}' > client_secrets.json
-      - name: Run
-        run: python main.py --auto
+          echo "$CLIENT_SECRETS_JSON" > client_secrets.json
+          python main.py --auto
