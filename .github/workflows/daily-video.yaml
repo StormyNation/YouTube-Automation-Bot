@@ -1,8 +1,9 @@
 name: Daily Video
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: 0 5 * * * # 5 AM UTC
+    - cron: '0 5 * * *'
 
 jobs:
   create_video:
@@ -28,10 +29,7 @@ jobs:
           echo "FREESOUND_API_KEY=${{ secrets.FREESOUND_API_KEY }}" >> $GITHUB_ENV
 
       - name: Decode client_secrets.json
-        run: echo "${{ secrets.CLIENT_SECRETS_JSON }}" | base64 --decode > client_secrets.json
-
-      - name: Decode token.json
-        run: echo "${{ secrets.TOKEN_JSON }}" | base64 --decode > token.json
+        run: echo "${{ secrets.CLIENT_SECRETS_JSON }}" > client_secrets.json
 
       - name: Run main.py
         run: python main.py --auto
